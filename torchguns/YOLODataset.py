@@ -1,14 +1,14 @@
 from .BoundingBoxDataset import BoundingBoxDataset
 import csv
 import os
+from torch import Tensor
+
 
 class YOLODataset(BoundingBoxDataset):
     postfix = ".txt"
 
     def __init__(self, root):
         super().__init__(root)
-
-    #    self.dir = folder
 
     # Override
     def boxes(self, n, image):
@@ -20,10 +20,10 @@ class YOLODataset(BoundingBoxDataset):
                 class_num = int(row[0])
                 xywh = list(map(float, row[1:]))
                 assert len(xywh) == 4
-                width, height = image.shape[1:]
+                height, width = image.shape[1:]
                 xyxy = YOLODataset.xywh2xyxy(xywh, width, height)
                 boxes.append([class_num] + list(xyxy))
-        return boxes
+        return Tensor(boxes)
 
     def getfilename(self, n):
         """ get file with annotations for image on n place """

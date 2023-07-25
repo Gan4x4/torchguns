@@ -1,7 +1,5 @@
 import unittest
 from torchguns.YOLODataset import YOLODataset
-from torchvision.utils import draw_bounding_boxes
-from torchvision.transforms.functional import to_pil_image
 
 
 class TestYOLODataset(unittest.TestCase):
