@@ -7,9 +7,6 @@ from torch import Tensor
 class YOLODataset(BoundingBoxDataset):
     postfix = ".txt"
 
-    def __init__(self, root):
-        super().__init__(root)
-
     # Override
     def boxes(self, n, image):
         boxes = []
