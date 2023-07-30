@@ -2,9 +2,9 @@ from .BoundingBoxDataset import BoundingBoxDataset
 import xml.etree.ElementTree as ElementTree
 from torch import Tensor
 
-class MockAttackDataset(BoundingBoxDataset):
+class USRTDataset(BoundingBoxDataset):
     classes = ['Handgun', 'Short_rifle', 'Knife']
-    firearms = ['Handgun', 'Short_rifle']
+    class_filter = ['Handgun', 'Short_rifle'] # firearms only
 
     def boxes(self, n, image):
         bboxs = []
