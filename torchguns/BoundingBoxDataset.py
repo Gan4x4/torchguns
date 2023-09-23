@@ -67,7 +67,7 @@ class BoundingBoxDataset(VisionDataset):
         if len(out) > 0:
             out = torch.stack(out)
         else:
-            out = torch.empty((0,4))
+            out = torch.empty((0, 4))
         return out
 
     def names2nums(self):
@@ -77,17 +77,16 @@ class BoundingBoxDataset(VisionDataset):
             nums.append(self.classes.index(n))
         return nums
 
-
     def image(self, n):
         """
             Return  image on n place in PIL format
         """
         path = self.image_paths[n]
-        return read_image(path,ImageReadMode.RGB)
+        return read_image(path, ImageReadMode.RGB)
 
     def boxes(self, n) -> torch.Tensor:
         """
-            Must return bbox list for image on n place in format
+            Must return bbox list for image of n place in format
             [class_num, x1, y1, x2, y2]
         """
         raise NotImplementedError
@@ -97,3 +96,4 @@ class BoundingBoxDataset(VisionDataset):
 
     def get_person_classes(self):
         return []
+
