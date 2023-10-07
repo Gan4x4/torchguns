@@ -5,6 +5,7 @@ from torchvision.io import read_image
 import torch
 import os
 from torchvision.io.image import ImageReadMode
+import pandas as pd
 
 
 class BoundingBoxDataset(VisionDataset):
@@ -97,3 +98,14 @@ class BoundingBoxDataset(VisionDataset):
     def get_person_classes(self):
         return []
 
+    def to_pandas(self):
+        l = len(self)
+        data = []
+        for i in range(l):
+            boxes = self.boxes(i, None)
+            f_nums = torch.full(size=(boxes.shape[0], 1), fill_value=1)
+            boxes_with_num = torch.cat((f_nums, boxes),dim=1)
+            data.append(boxes_with_num)
+            data = torch.stack(data).squeeze(0)
+            df = pd.DataFrame(data = data, columns=['frame_num', 'class_num', 'cx','cy','w','h'])  # , 'image_path','data_path']
+        return df

@@ -7,8 +7,8 @@ from .utils import draw
 # Pytorch wrapper to this dataset: https://github.com/Deepknowledge-US/US-Real-time-gun-detection-in-CCTV-An-open-problem-dataset
 
 
-class TestMockAttackDataset(unittest.TestCase):
-    @unittest.skip("For speedup debugging")
+class TestUSRTDataset(unittest.TestCase):
+
     def test_getitem(self):
         ds = USRTDataset("test/data/USRT")
         im, bbox = ds[0]
@@ -16,12 +16,18 @@ class TestMockAttackDataset(unittest.TestCase):
         pil = draw(im, bbox)
         pil.save("test/out/tmp.jpg")
 
-    @unittest.skip("Used only to find all weapon types")
+    #@unittest.skip("Used only to find all weapon types")
+    @unittest.skip("For speedup debugging")
     def test_scan(self):
         ds = USRTDataset("/home/anton/Code/MIEM/Weapon/gunrec/data/USRT")
+        w = 0
+        nw = 0
         for im, bbox in ds:
-            # print(len(bbox))
-            pass
+            if len(bbox):
+                w += 1
+            else:
+                nw += 1
+        print("Weapon",w,"No weapon",nw)
 
     def test_person(self):
         ds = USRTDatasetWithPersons("test/data/USRT")
@@ -29,6 +35,12 @@ class TestMockAttackDataset(unittest.TestCase):
         #self.assertEqual(len(bbox), 2)  # Two bbox
         pil = draw(im, bbox)
         pil.save("test/out/tmp.jpg")
+
+    @unittest.skip("Uncompleted")
+    def test_pandas(self):
+        ds = USRTDataset("test/data/USRT")
+        x = ds.to_pandas()
+        print(x.head())
 
 
 
