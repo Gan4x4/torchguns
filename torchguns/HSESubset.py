@@ -10,6 +10,8 @@ class HSESubset(VideoDataset):
 
     def boxes(self, n, image=None):
         gun_boxes = super().boxes(n, image)
+        if len(gun_boxes) > 0:
+            gun_boxes[:, 0] = self.classes.index("Gun")  # Gun class
         filename = self.getfilename(n)
         new_path = filename.replace('obj_train_data', 'persons')
         if not os.path.exists(new_path):

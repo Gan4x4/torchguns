@@ -8,6 +8,8 @@ class PersonDataset(Dataset):
     def __init__(self, base_dataset, transform=None):
         self.base_dataset = base_dataset
         self.persons = self.extract_persons()
+        if "Person" in self.base_dataset.class_filter:
+            self.base_dataset.class_filter.remove("Person")
 
     def extract_persons(self):
         persons = []
