@@ -8,6 +8,7 @@ from torchvision.io.image import ImageReadMode
 import pandas as pd
 
 
+
 class BoundingBoxDataset(VisionDataset):
     valid_images = [".jpg", ".gif", ".png", ".jpeg"]
     classes = []
@@ -17,10 +18,16 @@ class BoundingBoxDataset(VisionDataset):
     def __init__(
             self,
             root: str,
+            train: Optional[bool] = False,
+            download: Optional[bool] = False,
             transforms: Optional[Callable] = None,
             transform: Optional[Callable] = None,
-            target_transform: Optional[Callable] = None,
+            target_transform: Optional[Callable] = None
+
     ) -> None:
+
+        if download:
+            root = self.download(root, train)
         super().__init__(root, transforms, transform, target_transform)
         self.image_paths = self.get_image_paths(self.root)
 
@@ -104,8 +111,10 @@ class BoundingBoxDataset(VisionDataset):
         for i in range(l):
             boxes = self.boxes(i, None)
             f_nums = torch.full(size=(boxes.shape[0], 1), fill_value=1)
-            boxes_with_num = torch.cat((f_nums, boxes),dim=1)
+            boxes_with_num = torch.cat((f_nums, boxes), dim=1)
             data.append(boxes_with_num)
             data = torch.stack(data).squeeze(0)
-            df = pd.DataFrame(data = data, columns=['frame_num', 'class_num', 'cx','cy','w','h'])  # , 'image_path','data_path']
+            df = pd.DataFrame(data=data,
+                              columns=['frame_num', 'class_num', 'cx', 'cy', 'w', 'h'])  # , 'image_path','data_path']
         return df
+

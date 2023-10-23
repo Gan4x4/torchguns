@@ -1,6 +1,6 @@
 import unittest
-from torchguns.USRTDataset import USRTDataset
-from torchguns.USRTDataset import USRTDatasetWithPersons
+from src.USRTDataset import USRTDataset
+from src.USRTDataset import USRTDatasetWithPersons
 from .utils import draw
 
 

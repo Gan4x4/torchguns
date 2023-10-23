@@ -1,5 +1,5 @@
 import unittest
-from torchguns.YouTubeGddDataset import YouTubeGddDataset
+from src.YouTubeGddDataset import YouTubeGddDataset
 from .utils import draw
 from tqdm import tqdm
 

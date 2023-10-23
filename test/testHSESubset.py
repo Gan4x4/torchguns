@@ -1,5 +1,5 @@
 import unittest
-from torchguns.HSESubset import HSESubset
+from src.HSESubset import HSESubset
 from .utils import draw
 
 class HSESubsetTest(unittest.TestCase):

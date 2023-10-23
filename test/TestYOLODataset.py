@@ -1,5 +1,5 @@
 import unittest
-from torchguns.YOLODataset import YOLODataset
+from src.YOLODataset import YOLODataset
 from .utils import draw
 
 

@@ -1,5 +1,5 @@
 import unittest
-from torchguns.VideoDataset import VideoDataset
+from src.VideoDataset import VideoDataset
 from glob import glob
 from .utils import draw
 import os
