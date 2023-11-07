@@ -99,6 +99,15 @@ class BoundingBoxDataset(VisionDataset):
         """
         raise NotImplementedError
 
+    def download(self, root: str, train: bool = False) -> str:
+        """
+            Must download dataset files and return string containing path to directory with images
+            Parameters:
+                root(str): base path for downloading
+                train(str): load a training or test part
+        """
+        raise NotImplementedError
+
     def get_weapon_classes(self):
         return [0]
 

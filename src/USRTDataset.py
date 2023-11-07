@@ -4,11 +4,16 @@ import xml.etree.ElementTree as ElementTree
 import torch
 from torch import Tensor
 import os
+from torchvision.datasets.utils import download_and_extract_archive
+import warnings
 
 
 class USRTDataset(BoundingBoxDataset):
     classes = ['Handgun', 'Short_rifle', 'Knife']
     class_filter = ['Handgun', 'Short_rifle']  # firearms only
+    original_url = [
+        'https://uses0-my.sharepoint.com/:u:/g/personal/jsalazar_us_es/Ee7yqsE68U9PhnNHZneIuTABfTX5P9iVClJyxIKORfBJvg?e=VpXVtT']
+    urls = ['https://ml.gan4x4.ru/hse/torchguns/USRT.zip']
 
     def boxes(self, n, image=None):
         bboxs = []
@@ -37,6 +42,15 @@ class USRTDataset(BoundingBoxDataset):
         img_path = self.image_paths[n]  # TODO refactor to method call
         return img_path.replace('.jpg', '.xml')
 
+    def download(self, root, train=None):
+        """
+            Validation and train part in one archive
+        """
+        if train is not None:
+            warnings.warn("USRT dataset hasn't train/test split")
+        download_and_extract_archive(self.urls[0], root)  # images
+        return f"{root}{os.sep}USRT{os.sep}"
+
 
 class USRTDatasetWithPersons(USRTDataset):
     classes = ['Person', 'Handgun', 'Short_rifle', 'Knife', ]
@@ -50,7 +64,7 @@ class USRTDatasetWithPersons(USRTDataset):
         parts[-1] = "persons"
         parts.append(new_filename)
         new_path = os.sep.join(parts)
-        h,w = YOLODataset.extract_hw(image)
-        person_boxes = YOLODataset.read_yolo_file(new_path, h,w)
+        h, w = YOLODataset.extract_hw(image)
+        person_boxes = YOLODataset.read_yolo_file(new_path, h, w)
         all_boxes = torch.cat((original_boxes, Tensor(person_boxes)), dim=0)
         return all_boxes
