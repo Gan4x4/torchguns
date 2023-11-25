@@ -7,6 +7,7 @@ from PIL import Image
 from glob import glob
 from tqdm import tqdm
 import warnings
+import numpy as np
 
 
 class VideoDataset(YOLODataset):
@@ -64,11 +65,12 @@ class VideoDataset(YOLODataset):
         #self.image_paths = self.get_image_paths(self.root)
 
     def get_frame_list(self):
-        skip = int(self.calculate_skip())
-        frame_list = list(range(skip, self.total_frames, skip))
+        skip = self.calculate_skip()
+        frame_list = np.arange(skip, self.total_frames, skip)
+        frame_list = frame_list.astype(int)
         if self.desired_frames:
             assert len(frame_list) == self.desired_frames
-        return frame_list
+        return frame_list.tolist()
 
     def extract_frame(self, frame_num, cap):
         filename = self.get_frame_path(frame_num)
