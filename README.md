@@ -8,16 +8,103 @@ The following sections give basic examples of what you can do with Torchguns.
 
 
 ### Basic usage 
+
+Load classic dataset consisting of images
 ```python
-from torchguns import HSEDataset
+from torchguns import THGPDataset
 
-hse_dataset = HSEDataset(folder="", test=False, download=True)
 
-for image, bbox in hse_dataset:
+dataset = THGPDataset(folder="",
+                          test=False,
+                          download=True)
+
+for image, bbox in dataset:
     # image - Pillow image object
     # bbox Torch tensor of shape [N,4] where N - number of bbox on image
 
 ```
+
+Load dataset based on single video file
+
+```python
+from torchguns import HSESubset
+
+dataset = HSESubset("path_to_folder_with_video_and_labels", )
+for image, bbox in dataset:
+    # image - Pillow image object
+    # bbox Torch tensor of shape [N,4] where N - number of bbox on image
+ 
+```
+
+To load full HSEDataset consisting of 26 videos.
+```python
+from torchguns import HSEDataset
+
+hse_dataset = HSEDataset(root = "", train = True, download = True)
+ 
+```
+Under the hood HSEDataset is a subclass of [ConcatDataset](https://pytorch.org/docs/stable/data.html#torch.utils.data.ConcatDataset)
+
+
+### Extended usage
+
+
+Each part of full HSEDataset it's an object od HSESubset class. 
+This parts can be accessed through `sub_datasets` property 
+
+```python
+    hse_dataset.sub_datasets # dictionary of HSESubset objects
+
+```
+
+
+All dataset compatible with Pytorch [transforms](https://pytorch.org/vision/0.16/auto_examples/transforms/plot_transforms_getting_started.html?highlight=transforms) mechanism
+
+```python
+from torchguns import USRTDataset
+from from torchvision.transforms import v2
+import torch 
+
+transforms = v2.Compose([
+    v2.ToDtype(torch.float32, scale=True),
+    v2.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+])
+  
+dataset = USRTDataset(root = "usrt_folder",  transform = transforms)
+ 
+```
+
+
+For classes derived from VideoDataset you can set the frame rate of the frames extracted from a particular video.  
+
+```python
+dataset = HSESubset("path_to_folder_with_video_and_labels",
+                    fps = 2)
+```
+
+Also possibly to fix tonal nuber or frames fo extraction. In that case fps must be `None`
+It's convenient when you want balance data from sources with different length and frame rate
+
+```python
+dataset = HSESubset("path_to_folder_with_video_and_labels",
+                    fps = None,
+                    desired_frames = 100)
+```
+
+
+Possible  to converting a standard full-frame bounding-box dataset into a "Person dataset", if dataset contains bounding boxes for "person" class.
+In converted dataset each data item is squared image patch containing the content of a single person's bounding box
+and a list of scaled weapon bounding boxes that intersect with this patch.
+
+```python
+from torchguns import HSESubset, PersonDataset
+street_05 = HSESubset("test/data/HSE/street_05", desired_frames = 100)
+print(len(street_05)) # 100 frames
+person_street_05 = PersonDataset(street_05)
+print(len(person_street_05)) # 246 patch along with bbox
+```
+
+
 
 ## Datasets
 

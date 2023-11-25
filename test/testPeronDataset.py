@@ -22,13 +22,16 @@ class PersonDatasetTest(unittest.TestCase):
 
     def test_base(self):
         name = "street_05"
+        #name = "store_07"
         frame_num = 4
-        ds = HSESubset(f"test/out/hse_test/{name}", build_cache=True)
+        ds = HSESubset(f"test/out/hse_test/{name}",desired_frames = 100)
+        print(len(ds))
         # ds.class_filter = ['Handgun', 'Short_rifle']
         img, bbox = ds[frame_num]
         pil = draw(img, bbox, 4,["red", "green",  "green"])
         pil.save(f"test/out/hse_{name}_orig_{frame_num}.jpg")
         pds = PersonDataset(ds)
+        print(len(pds))
 
         for i, (img, bbox) in enumerate(pds):
             # print(len(bbox))

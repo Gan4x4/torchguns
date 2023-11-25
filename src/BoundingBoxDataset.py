@@ -8,7 +8,6 @@ from torchvision.io.image import ImageReadMode
 import pandas as pd
 
 
-
 class BoundingBoxDataset(VisionDataset):
     valid_images = [".jpg", ".gif", ".png", ".jpeg"]
     classes = []
@@ -126,4 +125,3 @@ class BoundingBoxDataset(VisionDataset):
             df = pd.DataFrame(data=data,
                               columns=['frame_num', 'class_num', 'cx', 'cy', 'w', 'h'])  # , 'image_path','data_path']
         return df
-
