@@ -4,19 +4,23 @@ from torch.utils.data import ConcatDataset
 from torchvision.datasets.utils import download_and_extract_archive
 from glob import glob
 from tqdm import tqdm
+from typing import Optional, Callable
 
 class HSEDataset(ConcatDataset):
+    url = "https://ml.gan4x4.ru/hse/torchguns/hse_dataset/"
     def __init__(self,
                  folder=None,
-                 test=False,
-                 download=True,
-                 transform=None,
+                 train: Optional[bool] = False,
+                 download: Optional[bool] = False,
+                 transforms: Optional[Callable] = None,
+                 transform: Optional[Callable] = None,
+                 target_transform: Optional[Callable] = None,
                  url=None,
                  exclude=[],
                  build_cache=False):
 
         self.transform = transform
-        self.name = 'miem_' + ('train' if not test else 'test')
+        self.name = 'hse_' + ('train' if train else 'test')
         self.build_cache = build_cache
 
         if folder is None:
@@ -24,7 +28,7 @@ class HSEDataset(ConcatDataset):
 
         if download:
             if url is None:
-                url = f"http://fmb.images.gan4x4.ru/video/miem/dataset/{self.name}.zip"
+                url = f"{self.url}{self.name}.zip"
             download_and_extract_archive(url, folder)
 
         ds_folder = folder + os.sep + self.name

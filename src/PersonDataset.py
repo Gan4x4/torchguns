@@ -4,6 +4,7 @@ import torchvision
 from torchvision import transforms
 from .YOLODataset import YOLODataset
 
+
 class PersonDataset(Dataset):
     def __init__(self, base_dataset, transform=None):
         self.base_dataset = base_dataset
@@ -58,7 +59,7 @@ class PersonDataset(Dataset):
 
         h = py2 - py1
         w = px2 - px1
-        deltas =torch.Tensor([-h*0.1, -w*0.1, h*0.1, w*0.1])
+        deltas = torch.Tensor([-h * 0.1, -w * 0.1, h * 0.1, w * 0.1])
         ih, iw = YOLODataset.extract_hw(img)
         # to square
         if h > w:
@@ -71,7 +72,7 @@ class PersonDataset(Dataset):
             deltas[3] += d
 
         p = person_bb + deltas
-        p[2] = min(iw,p[2])
+        p[2] = min(iw, p[2])
         p[3] = min(ih, p[3])
         p[p < 0] = 0
         return p
@@ -95,3 +96,6 @@ class PersonDataset(Dataset):
             y2n = min(height, y2 - py1)
             out.append([x1n, y1n, x2n, y2n])
         return torch.Tensor(out)
+
+    def _get_frame_num(self, n):
+        return int(self.persons[n][-1].item())
