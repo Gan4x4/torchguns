@@ -17,11 +17,12 @@ class HSEDataset(ConcatDataset):
                  target_transform: Optional[Callable] = None,
                  url=None,
                  exclude=[],
-                 build_cache=False):
+                 # build_cache=False,
+                 **kwargs):
 
-        self.transform = transform
+        self.transform = kwargs.get('transform', None)
         self.name = 'hse_' + ('train' if train else 'test')
-        self.build_cache = build_cache
+        #self.build_cache = build_cache
 
         if folder is None:
             folder = os.getcwd()
@@ -33,7 +34,7 @@ class HSEDataset(ConcatDataset):
 
         ds_folder = folder + os.sep + self.name
         paths = self.find_dirs(ds_folder, exclude)
-        self.sub_datasets = self.create_sub_datasets(paths)
+        self.sub_datasets = self.create_sub_datasets(paths, kwargs)
         super().__init__(self.sub_datasets.values())
 
     def find_dirs(self, folder, exclude):
@@ -46,10 +47,10 @@ class HSEDataset(ConcatDataset):
                 final.append(d)
         return sorted(final)
 
-    def create_sub_datasets(self, paths):
+    def create_sub_datasets(self, paths, kwargs):
         datasets = {}
         for i, path in enumerate(paths):
-            ds = HSESubset(path, transform=self.transform, build_cache=self.build_cache)
+            ds = HSESubset(path, **kwargs)
             datasets[ds.name] = ds
         return datasets
 

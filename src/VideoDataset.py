@@ -20,11 +20,11 @@ class VideoDataset(YOLODataset):
     def __init__(
             self,
             video_folder: str,
-            transforms: Optional[Callable] = None,
-            transform: Optional[Callable] = None,
-            target_transform: Optional[Callable] = None,
+            #transforms: Optional[Callable] = None,
+            #transform: Optional[Callable] = None,
+            #target_transform: Optional[Callable] = None,
             build_cache=True,
-            ** kwargs # settings like fps an desired frames
+            **kwargs  # settings like fps an desired frames
     ) -> None:
         self.video_folder = video_folder
         # self.settings = {'desired_frames': None}
@@ -35,7 +35,10 @@ class VideoDataset(YOLODataset):
         self.total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         if build_cache:
             self.build_cache()
-        super().__init__(self.labels_dir, transforms, transform, target_transform)
+        trans = {'transforms': None, 'transform': None, 'target_transform': None}
+        for t in trans:
+            trans[t] = kwargs.get(t, None)
+        super().__init__(self.labels_dir, **trans)
 
     def find_video(self):
         mp4_files = glob(self.video_folder + "/*.mp4")
@@ -62,7 +65,7 @@ class VideoDataset(YOLODataset):
             self.extract_frame(frame_num, cap)
         cap.release()
         self.delete_unused_frames(frame_list)
-        #self.image_paths = self.get_image_paths(self.root)
+        # self.image_paths = self.get_image_paths(self.root)
 
     def get_frame_list(self):
         skip = self.calculate_skip()
@@ -95,7 +98,7 @@ class VideoDataset(YOLODataset):
             if frame_num not in frames_to_preserve:
                 fn = self.get_frame_path(frame_num)
                 if os.path.isfile(fn):
-                    os.unlink(fn) #print("deleted", fn)
+                    os.unlink(fn)  # print("deleted", fn)
 
     def calculate_skip(self):
         if self.fps is None and self.desired_frames is None:
@@ -143,7 +146,7 @@ class VideoDataset(YOLODataset):
         if os.path.exists(fn):
             with open(fn) as fp:
                 self.settings = json.load(fp)
-                #self.settings = {**self.settings, **data}
+                # self.settings = {**self.settings, **data}
         # merge settings python 9+
         self.settings = self.settings | user_defined_settings
         self.setup_defaults()
@@ -156,8 +159,6 @@ class VideoDataset(YOLODataset):
         if (self.desired_frames is not None) and (self.fps is not None):
             warnings.warn(f"FPS and desired_frames are conflicting properties so desired_frames will be ignored")
             self.settings['desired_frames'] = None
-
-
 
     def save_settings(self, fn):
         with open(fn, 'w') as outfile:

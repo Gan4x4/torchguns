@@ -3,11 +3,10 @@ from src.HSESubset import HSESubset
 from src.HSEDataset import HSEDataset
 from .utils import draw
 
-class HSESubsetTest(unittest.TestCase):
 
+class HSESubsetTest(unittest.TestCase):
     path_download = "test/out/"
     path_to_sample = "test/data/HSE"
-    path_to_extract = "test/out/HSE"
 
     def test_load_HSE_train(self):
         ds = HSEDataset(self.path_download, download=True, train=True)
@@ -16,6 +15,15 @@ class HSESubsetTest(unittest.TestCase):
     def test_load_HSE_test(self):
         ds = HSEDataset(self.path_download, download=True, train=False)
         self.assertEqual(7, len(ds.sub_datasets))
+
+    def test_desired_frames(self):
+        ds = HSEDataset(self.path_download,
+                        download=True,
+                        train=False,
+                        desired_frames=10  # extract only 10 frames from each video
+                        )
+        for d in ds.sub_datasets.values():
+            self.assertEqual(10, len(d), msg=d.name)
 
 
 """
@@ -30,9 +38,3 @@ class HSESubsetTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
-
-
-
-
-

@@ -47,8 +47,6 @@ Under the hood HSEDataset is a subclass of [ConcatDataset](https://pytorch.org/d
 
 
 ### Extended usage
-
-
 Each part of full HSEDataset it's an object od HSESubset class. 
 This parts can be accessed through `sub_datasets` property 
 
