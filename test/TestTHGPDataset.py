@@ -1,15 +1,13 @@
 import unittest
-# from torchguns.THGPDataset import THGPDataset
-from .utils import draw
+from test.utils import draw
 from tqdm import tqdm
 import shutil
-from torchguns.THGPDataset import THGPDataset
+from torchguns.THGPDataset import HGPDataset, THGPDataset
 
 
 class TestTHGPDataset(unittest.TestCase):
     path = "test/data/THGP/images/val2017"
 
-    @unittest.skip("Time consuming operation")
     def test_load_THGP_train2017(self):
         """
             Load real train part of THGP dataset
@@ -18,23 +16,32 @@ class TestTHGPDataset(unittest.TestCase):
         ds = THGPDataset("test/out", download=True, train=True)
         self.assertEqual(5000, len(ds))
 
-    def test_load_HGP_train2017(self):
-        """
-            Load real train part of HGP dataset
-        """
-        shutil.rmtree("test/out/HGP", ignore_errors=True)
-        ds = THGPDataset("test/out", download=True, train=True)
-        self.assertEqual(1989, len(ds))
-
-
-    @unittest.skip("Time consuming operation")
-    def test_load_val2017(self):
+    def test_load_THGP_val2017(self):
         """
             Load real validation part of THGP dataset
         """
         shutil.rmtree("test/out/THGP", ignore_errors=True)
         ds = THGPDataset("test/out", download=True, train=False)
         self.assertEqual(960, len(ds))
+
+    def test_load_HGP_train2017(self):
+        """
+            Load real train part of HGP dataset
+        """
+        shutil.rmtree("test/out/HGP", ignore_errors=True)
+        ds = HGPDataset("test/out", download=True, train=True)
+        self.assertEqual(1989, len(ds))
+
+
+
+    def test_load_HGP_val2017(self):
+        """
+            Load real validation part of THGP dataset
+        """
+        shutil.rmtree("test/out/HGP", ignore_errors=True)
+        ds = HGPDataset("test/out", download=True, train=False)
+        self.assertEqual(210, len(ds))
+
 
     def test_getitem(self):
         ds = THGPDataset(self.path)

@@ -29,12 +29,10 @@ class THGPDataset(YOLODataset):
             postfix = "val2017"
         return f"{path}{os.sep}THGP{os.sep}images{os.sep}{postfix}{os.sep}"
 
-class THGPDataset(THGPDataset):
+
+class HGPDataset(THGPDataset):
     url = "https://ml.gan4x4.ru/hse/torchguns/HGP.zip"
 
     def download(self, path, train=True):
         path = super().download(path, train)
-        return path.replace("THGP","HGP")
-
-
-
+        return path.replace("THGP", "HGP")
