@@ -1,7 +1,6 @@
 import unittest
 from torchguns.HSEDataset import HSEDataset
 
-
 class HSESubsetTest(unittest.TestCase):
     path_download = "test/out/"
     path_to_sample = "test/data/HSE"

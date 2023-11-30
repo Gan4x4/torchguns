@@ -1,5 +1,5 @@
 import unittest
-from test.utils import draw
+from torchguns.utils import draw
 from tqdm import tqdm
 import shutil
 from torchguns.THGPDataset import HGPDataset, THGPDataset

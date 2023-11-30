@@ -1,16 +1,14 @@
 import unittest
-from src.VideoDataset import VideoDataset
+from torchguns.VideoDataset import VideoDataset
 from glob import glob
-from .utils import draw
+from torchguns.utils import draw
 import os
-import torch
+
 
 def delete_jpeg(folder):
     jpegs = glob(folder + "/*.jpg")
     for f in jpegs:
         os.remove(f)
-
-
 class TestVideoDataset(unittest.TestCase):
     folder = "test/data/HSEDataset/store_07"
 

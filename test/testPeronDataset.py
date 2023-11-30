@@ -2,7 +2,7 @@ import unittest
 from torchguns.PersonDataset import PersonDataset
 from torchguns.USRTDataset import USRTDatasetWithPersons
 from torchguns.HSESubset import  HSESubset
-from .utils import draw
+from torchguns.utils import draw
 
 class PersonDatasetTest(unittest.TestCase):
 

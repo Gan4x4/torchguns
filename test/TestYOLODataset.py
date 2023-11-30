@@ -1,6 +1,6 @@
 import unittest
-from src.YOLODataset import YOLODataset
-from .utils import draw
+from torchguns.YOLODataset import YOLODataset
+from torchguns.utils import draw
 
 
 class TestYOLODataset(unittest.TestCase):

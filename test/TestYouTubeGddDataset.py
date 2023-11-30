@@ -1,6 +1,6 @@
 import unittest
-from src.YouTubeGddDataset import YouTubeGddDataset
-from .utils import draw
+from torchguns.YouTubeGddDataset import YouTubeGddDataset
+from torchguns.utils import draw
 from tqdm import tqdm
 import shutil
 class TestYouTubeGddDataset(unittest.TestCase):

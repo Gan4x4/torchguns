@@ -1,7 +1,7 @@
 import unittest
 from torchguns.USRTDataset import USRTDataset
 from torchguns.USRTDataset import USRTDatasetWithPersons
-from .utils import draw
+from torchguns.utils import draw
 import shutil
 
 # Pytorch wrapper to this dataset: https://github.com/Deepknowledge-US/US-Real-time-gun-detection-in-CCTV-An-open-problem-dataset
