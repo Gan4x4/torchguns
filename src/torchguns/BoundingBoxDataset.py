@@ -6,6 +6,7 @@ import torch
 import os
 from torchvision.io.image import ImageReadMode
 import pandas as pd
+from torchvision import tv_tensors
 
 
 class BoundingBoxDataset(VisionDataset):
@@ -52,9 +53,14 @@ class BoundingBoxDataset(VisionDataset):
         boxes = self.filter(boxes)
         if self.transform:
             img_tensor = self.transform(img_tensor)
+        if self.transforms:
+            img_tensor, boxes = self.transforms(img_tensor, self.bbox_to_v2(boxes, img_tensor))
         if self.target_transform:
             boxes = self.target_transform(boxes)
         return img_tensor, boxes
+
+    def bbox_to_v2(self, bboxes, img):
+        return tv_tensors.BoundingBoxes(bboxes, format="XYXY", canvas_size=img.shape[-2:])
 
     def filter(self, boxes):
         filtered_boxes = self.filter_by_class(boxes)
