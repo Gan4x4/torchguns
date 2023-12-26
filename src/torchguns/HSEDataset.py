@@ -50,60 +50,12 @@ class HSEDataset(ConcatDataset):
     def create_sub_datasets(self, paths, kwargs):
         datasets = {}
         for i, path in enumerate(paths):
-            ds = HSESubset(path, **kwargs)
+            try:
+                ds = HSESubset(path, **kwargs)
+            except Exception as e:
+                print(f"Error on loading data from {path}")
+                raise e
+
             datasets[ds.name] = ds
         return datasets
 
-"""
-    def find_video(self, folder):
-        types = ('mp4', 'wmv')  # the tuple of file types
-        files_grabbed = []
-        for t in types:
-            files_grabbed.extend(glob(folder + "*." + t))
-        assert len(files_grabbed) == 1, f"Multiple videos in dir dir"
-        return files_grabbed[0]
-
-    def build_cache(self, verbose=True):
-        labels = []
-        for i, (_, label) in tqdm(enumerate(self), disable=not verbose):
-            labels.append(int(label))
-        return labels
-
-    def get_labels(self, verbose=True):
-        labels = self.update_cache(verbose=verbose)
-        return BaseDataset.split_labels(labels)
-
-    def detect_persons(self, detector):
-        for key in self.sub_datasets.keys():
-            ds = self.sub_datasets[key]
-            pdy = PersonDetector(ds, detector)
-            pdy()  # call
-
-    def info(self, perfix="Total"):
-        for k in self.sub_datasets.keys():
-            summary = self.sub_datasets[k].info(k)
-            print(summary)
-
-        l, p, n = self.get_labels(verbose=False)
-        print(
-            f"Full dataset Positive: {len(p) / len(l):0.2f}% Negative {len(n) / len(l):.2f} %  Num samples: {len(l)}")
-
-    def remove_unused(self):
-        cnt = 0
-        for d in self.sub_datasets.values():
-            cnt += d.remove_unused()
-        return cnt
-
-    def bboxes(self, idx):
-        # TODO: rewrite this code copied from ConcatDataset
-        if idx < 0:
-            if -idx > len(self):
-                raise ValueError("absolute value of index should not exceed dataset length")
-            idx = len(self) + idx
-        dataset_idx = bisect.bisect_right(self.cumulative_sizes, idx)
-        if dataset_idx == 0:
-            sample_idx = idx
-        else:
-            sample_idx = idx - self.cumulative_sizes[dataset_idx - 1]
-        return self.datasets[dataset_idx].bboxes(sample_idx)
-"""

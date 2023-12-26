@@ -21,10 +21,10 @@ class PersonDatasetTest(unittest.TestCase):
             pil.save(f"test/out/hse_store_07_person_{i}.jpg")
 
     def test_base(self):
-        name = "street_05"
-        #name = "store_07"
+        #name = "street_05"
+        name = "store_07"
         frame_num = 4
-        ds = HSESubset(f"test/out/hse_test/{name}",desired_frames = 100)
+        ds = HSESubset(f"test/data/HSE/{name}",desired_frames = 100)
         print(len(ds))
         # ds.class_filter = ['Handgun', 'Short_rifle']
         img, bbox = ds[frame_num]

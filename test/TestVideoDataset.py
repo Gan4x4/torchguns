@@ -10,7 +10,7 @@ def delete_jpeg(folder):
     for f in jpegs:
         os.remove(f)
 class TestVideoDataset(unittest.TestCase):
-    folder = "test/data/HSEDataset/store_07"
+    folder = "test/data/HSE/store_07"
 
     @unittest.skip("fff")
     def test_build_cache(self):

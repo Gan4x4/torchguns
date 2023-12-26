@@ -123,6 +123,7 @@ class VideoDataset(YOLODataset):
 
     @desired_frames.setter
     def desired_frames(self, value):
+        assert int(value) > 0
         self.settings['desired_frames'] = value
         self.settings['fps'] = None  # fps and desired_frames are conflicting properties
 
@@ -154,7 +155,7 @@ class VideoDataset(YOLODataset):
     def setup_defaults(self):
         defaults = ['desired_frames', 'fps']
         for d in defaults:
-            if d not in self.settings:
+            if d not in self.settings or self.settings[d] == 0:
                 self.settings[d] = None
         if (self.desired_frames is not None) and (self.fps is not None):
             warnings.warn(f"FPS and desired_frames are conflicting properties so desired_frames will be ignored")

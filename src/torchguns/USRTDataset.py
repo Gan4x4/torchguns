@@ -14,6 +14,7 @@ class USRTDataset(BoundingBoxDataset):
     original_url = [
         'https://uses0-my.sharepoint.com/:u:/g/personal/jsalazar_us_es/Ee7yqsE68U9PhnNHZneIuTABfTX5P9iVClJyxIKORfBJvg?e=VpXVtT']
     urls = ['https://ml.gan4x4.ru/hse/torchguns/USRT.zip']
+    name = "USRT"
 
     def boxes(self, n, image=None):
         bboxs = []
@@ -49,7 +50,9 @@ class USRTDataset(BoundingBoxDataset):
         if train is not None:
             warnings.warn("USRT dataset hasn't train/test split")
         download_and_extract_archive(self.urls[0], root)  # images
-        return f"{root}{os.sep}USRT{os.sep}"
+
+    def get_root(self, base_path):
+        return f"{base_path}{os.sep}{self.name}{os.sep}"
 
 
 class USRTDatasetWithPersons(USRTDataset):

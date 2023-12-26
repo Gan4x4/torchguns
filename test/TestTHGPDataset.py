@@ -6,7 +6,7 @@ from torchguns.THGPDataset import HGPDataset, THGPDataset
 
 
 class TestTHGPDataset(unittest.TestCase):
-    path = "test/data/THGP/images/val2017"
+    path = "test/data"
 
     def test_load_THGP_train2017(self):
         """
@@ -32,8 +32,6 @@ class TestTHGPDataset(unittest.TestCase):
         ds = HGPDataset("test/out", download=True, train=True)
         self.assertEqual(1989, len(ds))
 
-
-
     def test_load_HGP_val2017(self):
         """
             Load real validation part of THGP dataset
@@ -42,6 +40,9 @@ class TestTHGPDataset(unittest.TestCase):
         ds = HGPDataset("test/out", download=True, train=False)
         self.assertEqual(210, len(ds))
 
+    def test_patch(self):
+        ds = HGPDataset("test/out", download=False, train=False)
+        self.assertEqual(210, len(ds))
 
     def test_getitem(self):
         ds = THGPDataset(self.path)
@@ -53,37 +54,12 @@ class TestTHGPDataset(unittest.TestCase):
 
     def test_empty_bbox_list(self):
         ds = THGPDataset(self.path)
-        self.assertCountEqual(ds.class_filter,['gun'])
-        im, bbox = ds[1] # item number 780 in real dataset this item has no guns bbox
+        self.assertCountEqual(ds.class_filter, ['gun'])
+        im, bbox = ds[1]  # item number 780 in real dataset this item has no guns bbox
         self.assertEqual(len(bbox), 0)
         pil = draw(im, bbox)
         pil.save("test/out/thgp_780.jpg")
 
-    """
-
-    def test_len(self):
-        ds = THGPDataset("test/data/thgp_dataset/images/val2017")
-        self.assertEqual(len(ds), 1)
-
-    def test_scan(self):
-        ds = THGPDataset("/home/anton/Code/MIEM/Weapon/TYolov5/Datasets/HGP/images/val2017")
-        for i, (im, bbox) in enumerate(ds):
-            if len(im) >0:
-                print(im.shape)
-                self.assertEqual(im.shape[0], 3, ds.image_paths[i])
-            #print(bbox.shape,i,ds.image_paths[i])
-            #if bbox.shape[0] > 0:
-            message = f'Invalid bbox {bbox} item {i}'
-            self.assertEqual(bbox.shape[1] , 4) , message
-
-
-    def get_weapon_clases(self):
-        return self.classes.index("gun")
-
-    def get_person_clases(self):
-        return []
-
-"""
 
 if __name__ == '__main__':
     unittest.main()

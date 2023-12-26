@@ -6,7 +6,7 @@ import shutil
 class TestYouTubeGddDataset(unittest.TestCase):
 
     path_download = "test/out/"
-    path_to_sample = "test/data/YouTube-GDD/images/val"
+    path_to_sample = "test/data"
     path_to_extract = "test/out/YouTube-GDD"
 
 
@@ -16,7 +16,7 @@ class TestYouTubeGddDataset(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.path_to_extract, ignore_errors = True)
 
-    @unittest.skip("Time consuming operation")
+    #@unittest.skip("Time consuming operation")
     def test_load_GDD_train(self):
         """
             Load real train part of YouTube-GDD dataset
@@ -24,7 +24,7 @@ class TestYouTubeGddDataset(unittest.TestCase):
         ds = YouTubeGddDataset(self.path_download, download=True, train=True)
         self.assertEqual(4000, len(ds))
 
-    @unittest.skip("Time consuming operation")
+    #@unittest.skip("Time consuming operation")
     def test_load_GDD_val(self):
         """
             Load real train part of YouTube-GDD dataset
@@ -33,7 +33,7 @@ class TestYouTubeGddDataset(unittest.TestCase):
         self.assertEqual(500, len(ds))
 
     def test_getitem(self):
-        ds = YouTubeGddDataset("test/data/YouTube-GDD/images/val")
+        ds = YouTubeGddDataset("test/data")
         ds.class_filter = []
         im, bbox = ds[0]
         self.assertEqual(len(bbox), 2)  # add assertion here

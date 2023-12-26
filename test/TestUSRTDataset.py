@@ -9,7 +9,7 @@ import shutil
 
 class TestUSRTDataset(unittest.TestCase):
     path_download = "test/out/"
-    path_to_sample = "test/data/USRT/images/val"
+    path_to_sample = "test/data"
     path_to_extract = "test/out/USRT"
 
     def tearDown(self):
@@ -23,7 +23,7 @@ class TestUSRTDataset(unittest.TestCase):
         self.assertEqual(5149, len(ds))
 
     def test_getitem(self):
-        ds = USRTDataset("test/data/USRT")
+        ds = USRTDataset("test/data")
         im, bbox = ds[0]
         self.assertEqual(len(bbox), 2)  # Two bbox
         pil = draw(im, bbox)

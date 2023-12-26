@@ -25,10 +25,21 @@ class BoundingBoxDataset(VisionDataset):
             target_transform: Optional[Callable] = None
 
     ) -> None:
+        """
+        Base class for dataset containing bbox
 
+        :param root: path to directory with images
+        :param train: load train or test/val part if available
+        :returns: None
+        """
+        self.train = train
         if download:
-            root = self.download(root, train)
+            self.download(root, train)
+        root = self.get_root(root)
+        # self.root = root + os.sep + self.root
         super().__init__(root, transforms, transform, target_transform)
+        # Override replacement of transforms in base class
+        self.transforms = transforms
         self.image_paths = self.get_image_paths(self.root)
 
     def get_image_paths(self, root):
@@ -49,12 +60,14 @@ class BoundingBoxDataset(VisionDataset):
 
     def __getitem__(self, n):
         img_tensor = self.image(n)
+        img_tensor = tv_tensors.Image(img_tensor)
         boxes = self.boxes(n, img_tensor)
         boxes = self.filter(boxes)
+        boxes = self.bbox_to_v2(boxes, img_tensor)
         if self.transform:
             img_tensor = self.transform(img_tensor)
         if self.transforms:
-            img_tensor, boxes = self.transforms(img_tensor, self.bbox_to_v2(boxes, img_tensor))
+            img_tensor, boxes = self.transforms(img_tensor, boxes)
         if self.target_transform:
             boxes = self.target_transform(boxes)
         return img_tensor, boxes
@@ -131,3 +144,7 @@ class BoundingBoxDataset(VisionDataset):
             df = pd.DataFrame(data=data,
                               columns=['frame_num', 'class_num', 'cx', 'cy', 'w', 'h'])  # , 'image_path','data_path']
         return df
+
+    def get_root(self, base_path):
+        # for overriding
+        return base_path

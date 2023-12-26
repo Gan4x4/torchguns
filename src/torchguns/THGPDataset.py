@@ -7,6 +7,14 @@ class THGPDataset(YOLODataset):
     classes = ['hand', 'gun', 'phone']
     class_filter = ['gun']
     url = "https://ml.gan4x4.ru/hse/torchguns/THGP.zip"
+    name = "THGP"
+
+    def get_root(self, base_path):
+        if self.train:
+            postfix = "train2017"
+        else:
+            postfix = "val2017"
+        return f"{base_path}{os.sep}{self.name}{os.sep}images{os.sep}{postfix}{os.sep}"
 
     def getfilename(self, n):
         """ get file with annotations for image on n place """
@@ -23,16 +31,12 @@ class THGPDataset(YOLODataset):
             self.url,
             path
         )
-        if train:
-            postfix = "train2017"
-        else:
-            postfix = "val2017"
-        return f"{path}{os.sep}THGP{os.sep}images{os.sep}{postfix}{os.sep}"
 
 
 class HGPDataset(THGPDataset):
     url = "https://ml.gan4x4.ru/hse/torchguns/HGP.zip"
+    name = "HGP"
 
-    def download(self, path, train=True):
-        path = super().download(path, train)
-        return path.replace("THGP", "HGP")
+    def get_root(self, base_path):
+        root = super().get_root(base_path)
+        return root.replace("THGP", self.name)
