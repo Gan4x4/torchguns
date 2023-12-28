@@ -28,18 +28,15 @@ class PersonDataset(Dataset):
         return len(self.persons)
 
     def __getitem__(self, n):
-        person_bb = self.persons[n]
-        base_num = int(person_bb[-1].item())
+        base_num = self._get_frame_num(n)
         pil, boxes = self.base_dataset[base_num]
         # align  the person box
+
+        person_bb = self.persons[n]
         p_box = self.expand(person_bb[1:5], pil)
         x1, y1, x2, y2 = p_box.int().tolist()
 
-        # height, width = YOLODataset.extract_hw(tensor_img=pil)
-        # x1 *= width
-        # x2 *= width
-        # y1 *= height
-        # y2 *= height
+        #x1, y1, x2, y2 = self.get_squared_person_bbox(n)
 
         weapon_bb = boxes  # because of filter
         patch = transforms.functional.crop(pil, y1, x1, height=y2 - y1, width=x2 - x1)
@@ -53,6 +50,11 @@ class PersonDataset(Dataset):
         overlapped_weapon_bb = self.rescale_weapon(p_box, overlapped_weapon_bb)
 
         return patch, overlapped_weapon_bb
+
+    def get_squared_person_bbox(self, n):
+        person_bb = self.persons[n]
+        p_box = self.expand(person_bb[1:5], pil)
+        return p_box.int().tolist()
 
     def expand(self, person_bb, img):
         px1, py1, px2, py2 = person_bb
@@ -99,3 +101,17 @@ class PersonDataset(Dataset):
 
     def _get_frame_num(self, n):
         return int(self.persons[n][-1].item())
+
+    def upscale(self, n, boxes: torch.Tensor):
+        person_bb = self.persons[n]
+        base_num = self._get_frame_num(n)
+        pil, _ = self.base_dataset[base_num]
+        # align  the person box
+        p_box = self.expand(person_bb[1:5], pil)
+        x1, y1, x2, y2 = p_box.int().tolist()
+        shift = torch.Tensor([x1, y1 , x1, y1])
+        upscaled_boxes = boxes + shift
+        return upscaled_boxes
+
+
+

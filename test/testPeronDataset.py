@@ -1,4 +1,7 @@
 import unittest
+
+import torch
+
 from torchguns.PersonDataset import PersonDataset
 from torchguns.USRTDataset import USRTDatasetWithPersons
 from torchguns.HSESubset import  HSESubset
@@ -40,6 +43,22 @@ class PersonDatasetTest(unittest.TestCase):
                 pil.save(f"test/out/hse_{name}_{frame_num}_person_{i}.jpg")
             elif pds._get_frame_num(i) > frame_num:
                 break
+
+    def test_upscale(self):
+        name = "store_07"
+        ds = HSESubset(f"test/data/HSE/{name}", desired_frames=20)
+        frame_num = 1
+        img, orig_bbox = ds[frame_num]
+        #pil = draw(img, orig_bbox, 4, ["red", "green", "green"])
+
+        pds = PersonDataset(ds)
+        restored_bbox = pds.upscale(2, pds[2][1])
+        found = False
+        for o in orig_bbox:
+            for r in restored_bbox:
+                if torch.allclose(o,r, atol = 0.9):
+                    found = True
+        self.assertTrue(found, "Boxes not restored properly")
 
 
 """
