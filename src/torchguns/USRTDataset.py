@@ -71,3 +71,4 @@ class USRTDatasetWithPersons(USRTDataset):
         person_boxes = YOLODataset.read_yolo_file(new_path, h, w)
         all_boxes = torch.cat((original_boxes, Tensor(person_boxes)), dim=0)
         return all_boxes
+

@@ -148,3 +148,4 @@ class BoundingBoxDataset(VisionDataset):
     def get_root(self, base_path):
         # for overriding
         return base_path
+
