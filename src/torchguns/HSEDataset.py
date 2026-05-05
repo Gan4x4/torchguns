@@ -1,5 +1,6 @@
 from .HSESubset import HSESubset
 import os
+import zipfile
 from torch.utils.data import ConcatDataset
 from torchvision.datasets.utils import download_and_extract_archive
 from glob import glob
@@ -30,6 +31,9 @@ class HSEDataset(ConcatDataset):
         if download:
             if url is None:
                 url = f"{self.url}{self.name}.zip"
+            zipfilename = os.path.join(folder, url.rsplit("/", 1)[-1])
+            if os.path.exists(zipfilename) and not zipfile.is_zipfile(zipfilename):
+                os.remove(zipfilename)
             download_and_extract_archive(url, folder)
 
         ds_folder = folder + os.sep + self.name
@@ -58,4 +62,3 @@ class HSEDataset(ConcatDataset):
 
             datasets[ds.name] = ds
         return datasets
-

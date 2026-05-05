@@ -93,7 +93,7 @@ class BoundingBoxDataset(VisionDataset):
         if len(out) > 0:
             out = torch.stack(out)
         else:
-            out = torch.empty((0, 4))
+            out = torch.empty((0, 5))
         return out
 
     def names2nums(self):
@@ -137,13 +137,16 @@ class BoundingBoxDataset(VisionDataset):
         data = []
         for i in range(l):
             boxes = self.boxes(i, None)
-            f_nums = torch.full(size=(boxes.shape[0], 1), fill_value=1)
+            if boxes.numel() == 0:
+                continue
+            f_nums = torch.full(size=(boxes.shape[0], 1), fill_value=i)
             boxes_with_num = torch.cat((f_nums, boxes), dim=1)
             data.append(boxes_with_num)
-            data = torch.stack(data).squeeze(0)
-            df = pd.DataFrame(data=data,
-                              columns=['frame_num', 'class_num', 'cx', 'cy', 'w', 'h'])  # , 'image_path','data_path']
-        return df
+        if len(data) == 0:
+            return pd.DataFrame(columns=['frame_num', 'class_num', 'cx', 'cy', 'w', 'h'])
+        data = torch.cat(data, dim=0)
+        return pd.DataFrame(data=data,
+                            columns=['frame_num', 'class_num', 'cx', 'cy', 'w', 'h'])
 
     def get_root(self, base_path):
         # for overriding

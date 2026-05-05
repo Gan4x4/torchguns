@@ -28,7 +28,7 @@ To load HSEDataset consisting of multiple videos.
 ```python
 from torchguns.HSEDataset import HSEDataset
 
-hse_test_dataset = HSEDataset(root = "", train = False, download = True)
+hse_test_dataset = HSEDataset(folder = "", train = False, download = True)
  
 ```
 Under the hood HSEDataset is a subclass of [ConcatDataset](https://pytorch.org/docs/stable/data.html#torch.utils.data.ConcatDataset)
